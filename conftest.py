@@ -24,3 +24,10 @@ def driver_firefox():
     yield driver
 
     driver.quit()
+
+
+@pytest.fixture
+def driver_Chrome():
+    driver = webdriver.Chrome()
+    yield driver
+    driver.quit()
