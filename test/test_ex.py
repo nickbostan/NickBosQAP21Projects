@@ -22,7 +22,7 @@ def test_selenium_web(driver):
 
 
 def test_pytest(driver):
-    url = "https://docs.pytest.org/en/stable/"
+    url = "https://www.python.org/downloads/"
     driver.get(url)
-    assert driver.title == "pytest documentation"
+    assert driver.title == "Download Python | Python.org"
     assert driver.current_url == url
