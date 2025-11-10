@@ -7,7 +7,7 @@ from selenium.webdriver.chrome.options import Options as ChromeOptions
 def driver():
     opts = ChromeOptions()
     opts.headless = True
-    opts.add_argument("--window-size=800,1280")
+    opts.add_argument("--window-size=1080,1680")
     driver = webdriver.Chrome(options=opts)
     driver.implicitly_wait(10)
     yield driver
