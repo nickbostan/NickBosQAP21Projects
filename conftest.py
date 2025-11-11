@@ -19,3 +19,17 @@ def driver_chrome():
     driver = webdriver.Chrome()
     yield driver
     driver.quit()
+
+
+def pytest_addoption(parser):
+
+    parser.addoption(
+        "--env",
+        action="store",
+        default="test",
+        help="Environment: test, staging, production",
+    )
+
+
+def pytest_configure(config):
+    pytest.env = config.getoption("--env")
