@@ -2,7 +2,7 @@ from selenium.webdriver.common.by import By
 
 from HM23.core.base_element import BaseElement
 from HM23.core.base_page import BasePage
-from HM23.core.urls import URLS
+from HM23.urls import URLS
 
 
 class LoginPage(BasePage):

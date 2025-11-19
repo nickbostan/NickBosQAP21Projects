@@ -1,7 +1,7 @@
 import pytest
 
-from HM23.core.pageobj_orange.dashboard_page import DashboardPage
-from HM23.core.pageobj_orange.login_page import LoginPage
+from HM23.pageobj_orange.dashboard_page import DashboardPage
+from HM23.pageobj_orange.login_page import LoginPage
 
 
 @pytest.fixture()
