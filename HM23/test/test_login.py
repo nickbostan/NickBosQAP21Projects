@@ -1,7 +1,9 @@
 import pytest
+import pytest_check as check
 
 from HM23.pageobj_orange.dashboard_page import DashboardPage
 from HM23.pageobj_orange.login_page import LoginPage
+from HM23.urls import URLS
 
 
 @pytest.fixture()
@@ -19,9 +21,10 @@ def open_page(login_page):
     login_page.open_page()
 
 
-@pytest.mark.only
-def test_check_all_elements(login_page, open_page):
+@pytest.mark.smoke
+def test_check_all_elements(login_page, open_page, driver):
     login_page.check_that_page_opened()
+    assert login_page.driver.current_url == URLS.LOGIN
 
 
 @pytest.mark.smoke
@@ -30,11 +33,13 @@ def test_positive_login(login_page, dashboard_page, open_page):
     dashboard_page.check_that_page_opened()
 
 
-def test_logout(login_page, dashboard_page, open_page):
+def test_logout(login_page, dashboard_page, open_page, driver):
     login_page.login("Admin", "admin123")
     dashboard_page.check_that_page_opened()
+    check.equal(login_page.driver.current_url, URLS.DASHBOARD)
     dashboard_page.click_logout()
     login_page.check_that_page_opened()
+    check.equal(login_page.driver.current_url, URLS.LOGIN)
 
 
 @pytest.mark.parametrize(
@@ -81,3 +86,49 @@ def test_social_links(login_page, link_element, expected_url, open_page, driver)
     driver.close()
     driver.switch_to.window(original_window)
     assert original_url == login_page.driver.current_url
+
+
+def test_forgot_password_link(login_page, open_page, driver):
+    login_page.FORGOT_PASSWORD_LINK.click()
+    assert login_page.driver.current_url == URLS.PASSWORD
+
+
+@pytest.mark.parametrize(
+    "length,expected",
+    [
+        (50, "accept"),
+        (100, "accept"),
+        (255, "accept"),
+        (256, "cut off"),
+        (500, "cut off"),
+        (1000, "cut off"),
+    ],
+)
+def test_input_fields_lengths(login_page, open_page, length, expected):
+    login_page.INPUT_PASSWORD.fill("x" * length)
+
+    actual_value = login_page.INPUT_PASSWORD.get_attribute("value")
+    actual_length = len(actual_value)
+
+    if expected == "accept":
+        check.equal(
+            actual_length, length, f"Expected {length}, granted {actual_length}"
+        )
+    elif expected == "cut off":
+        check.less_equal(
+            actual_length, length, f"Entered much more then possible: {actual_length}"
+        )
+
+    login_page.INPUT_USER_NAME.fill("x" * length)
+
+    actual_value = login_page.INPUT_USER_NAME.get_attribute("value")
+    actual_length = len(actual_value)
+
+    if expected == "accept":
+        check.equal(
+            actual_length, length, f"Expected {length}, granted {actual_length}"
+        )
+    elif expected == "cut off":
+        check.less_equal(
+            actual_length, length, f"Entered much more then possible: {actual_length}"
+        )

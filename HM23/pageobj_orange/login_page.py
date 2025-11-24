@@ -48,8 +48,6 @@ class LoginPage(BasePage):
 
     def check_that_page_opened(self):
         self.LOGO.should_be_visible()
-
-        self.LOGO.should_be_visible()
         self.LOGO_2.should_be_visible()
         self.LOGIN_TITLE.should_be_visible()
         self.LOGIN_BUTTON.should_be_visible()

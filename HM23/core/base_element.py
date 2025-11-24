@@ -13,6 +13,10 @@ class BaseElement:
             EC.element_to_be_clickable(self.selector)
         )
 
+    def get_attribute(self, atr_name):
+        element = self.get_element()
+        return element.get_attribute(atr_name)
+
     def click(self):
         element = self.get_element()
         element.click()
@@ -40,20 +44,6 @@ class BaseElement:
             EC.element_to_be_clickable(self.selector)
         )
 
-    def wait_for_windows_count(self, expected_count):
-        self.wait.until(EC.number_of_windows_to_be(expected_count))
-
-    def switch_to_new_window(self, expected_windows=2):
-        original_window = self.driver.current_window_handle
-        original_url = self.driver.current_url
-
-        self.wait_for_windows_count(expected_windows)
-
-        for window in self.driver.window_handles:
-            if window != original_window:
-                self.driver.switch_to.window(window)
-                break
-
-        new_url = self.driver.current_url
-        assert new_url != original_url
-        return new_url
+    def is_checked(self):
+        element = self.get_element()
+        return element.is_selected()

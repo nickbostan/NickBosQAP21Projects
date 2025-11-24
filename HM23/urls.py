@@ -4,6 +4,7 @@ import enum
 class URLS(enum.StrEnum):
     BASE = "https://opensource-demo.orangehrmlive.com/web/index.php/"
     LOGIN = BASE + "auth/login"
+    PASSWORD = BASE + "auth/requestPasswordResetCode"
     DASHBOARD = BASE + "dashboard/index"
     ADMIN = BASE + "admin/viewSystemUsers"
     PIM = BASE + "pim/viewEmployeeList"
