@@ -17,7 +17,7 @@ def token(tms_service):
     response_json = tms_service.login("user@example.com", "Odmen123")
     assert response_json["access_token"]
     pytest.token = response_json["access_token"]
-    return token
+    return pytest.token
 
 
 def test_create_second_admin(tms_service):
@@ -35,11 +35,11 @@ def test_create_board(token, tms_service):
     assert response_json["title"] == "string"
     assert response_json["description"] == "string"
     assert response_json["public"] is False
-    assert response_json["created by"]
+    assert response_json["created_by"]
     assert response_json["archived"] is False
 
     current_date = datetime.now().strftime("%Y-%m-%d")
-    assert response_json["created at"].startswith(current_date)
+    assert response_json["created_at"].startswith(current_date)
 
 
 def test_create_task(token, tms_service):
@@ -56,7 +56,7 @@ def test_create_task(token, tms_service):
     assert response_json["priority"] == "high"
 
     current_date = datetime.now().strftime("%Y-%m-%d")
-    assert response_json["created at"].startswith(current_date)
+    assert response_json["created_at"].startswith(current_date)
 
 
 def test_get_users_without_token(tms_service):
@@ -71,10 +71,12 @@ def test_get_board_members(token, tms_service):
     board_response = tms_service.create_board("Board", "abra", False)
     board_id = board_response["id"]
     response_json = tms_service.get_board_members(board_id)
+    assert isinstance(
+        response_json, list
+    ), f"Expected list, got {type(response_json)}: {response_json}"
 
     logger.info(response_json)
-    assert len(response_json["members"]) >= 1
-    assert response_json["members"][0]["id"]
+    assert len(response_json) >= 1, "Board should have at least one member (creator)"
 
 
 def test_add_board_member(token, tms_service):

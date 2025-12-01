@@ -1,3 +1,4 @@
+import pytest
 import requests
 from logger import logger
 
@@ -6,8 +7,8 @@ class BaseService:
 
     @staticmethod
     def request(method, url, token, body, code):
-        if token:
-            headers = {"Authorization": f"Bearer {token}"}
+        if pytest.token:
+            headers = {"Authorization": f"Bearer {pytest.token}"}
         else:
             headers = None
         try:

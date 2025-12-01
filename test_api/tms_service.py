@@ -1,12 +1,11 @@
+import pytest
+
 from test_api.base_service import BaseService
 
 DOMAIN = "http://localhost:8000"
 
 
 class TmsService(BaseService):
-
-    def __init__(self):
-        self.token = None
 
     def login(self, email, password):
         """
@@ -18,7 +17,7 @@ class TmsService(BaseService):
         url = f"{DOMAIN}/auth/login"
         body = {"email": email, "password": password}
         # For login you don`t need token, so give None
-        response = self.post(url, token=self.token, body=body, code=200)
+        response = self.post(url, token=pytest.token, body=body, code=200)
         return response
 
     def register_admin(self, username, email, password, code=None):
@@ -32,7 +31,7 @@ class TmsService(BaseService):
         """
         url = f"{DOMAIN}/auth/register-admin"
         body = {"username": username, "email": email, "password": password}
-        response = self.post(url, token=self.token, body=body, code=code)
+        response = self.post(url, token=pytest.token, body=body, code=code)
         return response
 
     def create_board(self, title, description, public):
@@ -46,7 +45,7 @@ class TmsService(BaseService):
         url = f"{DOMAIN}/boards"
         body = {"title": title, "description": description, "public": public}
         # Token is got from pytest.token automatically
-        response = self.post(url, token=self.token, body=body, code=201)
+        response = self.post(url, token=pytest.token, body=body, code=201)
         return response
 
     def create_task(self, board_id, title, description, status, priority):
@@ -66,7 +65,7 @@ class TmsService(BaseService):
             "status": status,
             "priority": priority,
         }
-        response = self.post(url, token=self.token, body=body, code=201)
+        response = self.post(url, token=pytest.token, body=body, code=201)
         return response
 
     def get_users(self, skip=0, limit=100, code=200):
@@ -78,7 +77,7 @@ class TmsService(BaseService):
         :return: users list
         """
         url = f"{DOMAIN}/users/?skip={skip}&limit={limit}"
-        response = self.get(url, token=self.token, code=code)
+        response = self.get(url, token=pytest.token, code=code)
         return response
 
     def get_board_members(self, board_id, code=200):
@@ -89,7 +88,7 @@ class TmsService(BaseService):
         :return: list of boards members
         """
         url = f"{DOMAIN}/boards/{board_id}/members"
-        response = self.get(url, token=self.token, code=code)
+        response = self.get(url, token=pytest.token, code=code)
         return response
 
     def add_board_member(self, board_id, user_id, code=200):
@@ -101,7 +100,7 @@ class TmsService(BaseService):
         :return: server response
         """
         url = f"{DOMAIN}/boards/{board_id}/members/{user_id}"
-        response = self.post(url, token=self.token, code=code)
+        response = self.post(url, token=pytest.token, code=code)
         return response
 
     def task_next_status(self, task_id, code=200):
@@ -112,7 +111,7 @@ class TmsService(BaseService):
         :return: updated task
         """
         url = f"{DOMAIN}/tasks/{task_id}/next-status"
-        response = self.put(url, token=self.token, body=None, code=code)
+        response = self.put(url, token=pytest.token, body=None, code=code)
         return response
 
     def update_task_status(self, board_id, task_ids, new_status, code=200):
@@ -126,7 +125,7 @@ class TmsService(BaseService):
         """
         url = f"{DOMAIN}/boards/{board_id}tasks/{task_ids}/bulk/status"
         body = {"task_ids": task_ids, "new_status": new_status}
-        response = self.put(url, token=self.token, body=body, code=code)
+        response = self.put(url, token=pytest.token, body=body, code=code)
         return response
 
     def get_board_stats(self, board_id, code=200):
@@ -137,7 +136,7 @@ class TmsService(BaseService):
         :return:
         """
         url = f"{DOMAIN}/boards/{board_id}/stats"
-        response = self.get(url, token=self.token, code=code)
+        response = self.get(url, token=pytest.token, code=code)
         return response
 
     def search_tasks(self, query, skip=0, limit=100, code=200):
@@ -150,7 +149,7 @@ class TmsService(BaseService):
         :return: list of found tasks
         """
         url = f"{DOMAIN}/tasks/?search={query}&skip={skip}&limit={limit}"
-        response = self.get(url, token=self.token, code=code)
+        response = self.get(url, token=pytest.token, code=code)
         return response
 
     def update_task_priority(self, task_id, priority, code=200):
@@ -162,7 +161,7 @@ class TmsService(BaseService):
         :return:
         """
         url = f"{DOMAIN}/tasks/{task_id}/priority/{priority}"
-        response = self.put(url, token=self.token, body=None, code=code)
+        response = self.put(url, token=pytest.token, body=None, code=code)
         return response
 
     def get_my_tasks(self, skip=0, limit=100, code=200):
@@ -174,7 +173,7 @@ class TmsService(BaseService):
         :return:
         """
         url = f"{DOMAIN}/users/me/tasks?search={skip}&limit={limit}"
-        response = self.get(url, token=self.token, code=code)
+        response = self.get(url, token=pytest.token, code=code)
         return response
 
     def archive_board(self, board_id, code=200):
@@ -185,7 +184,7 @@ class TmsService(BaseService):
         :return:
         """
         url = f"{DOMAIN}/boards/{board_id}/archive"
-        response = self.put(url, token=self.token, body=None, code=code)
+        response = self.put(url, token=pytest.token, body=None, code=code)
         return response
 
     def moving_tasks(self, task_id, target_board_id, code=200):
@@ -197,5 +196,5 @@ class TmsService(BaseService):
         :return:
         """
         url = f"{DOMAIN}/tasks/{task_id}/move-to/{target_board_id}"
-        response = self.put(url, token=self.token, body=None, code=code)
+        response = self.put(url, token=pytest.token, body=None, code=code)
         return response
